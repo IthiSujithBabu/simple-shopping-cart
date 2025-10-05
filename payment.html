@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSimple - Payment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">ShopSimple</div>
+        <div class="checkout-steps">
+            <span class="step active">1. Cart</span>
+            <span class="step active">2. Address</span>
+            <span class="step active">3. Payment</span>
+            <span class="step">4. Confirmation</span>
+        </div>
+    </header>
+
+    <main class="checkout-main">
+        <div class="checkout-container">
+            <h2>Payment Method</h2>
+            
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div id="order-items"></div>
+                <div class="order-total">
+                    <strong>Total: $<span id="order-total">0.00</span></strong>
+                </div>
+            </div>
+
+            <form id="payment-form" class="payment-form">
+                <div class="payment-methods">
+                    <label class="payment-option">
+                        <input type="radio" name="payment-method" value="card" checked>
+                        <span>Credit/Debit Card</span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment-method" value="cod">
+                        <span>Cash on Delivery (COD)</span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment-method" value="paypal">
+                        <span>PayPal</span>
+                    </label>
+                </div>
+
+                <div id="card-details" class="card-details">
+                    <div class="form-group">
+                        <label for="card-number">Card Number *</label>
+                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expiry-date">Expiry Date *</label>
+                            <input type="text" id="expiry-date" placeholder="MM/YY">
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV *</label>
+                            <input type="text" id="cvv" placeholder="123">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="card-name">Name on Card *</label>
+                        <input type="text" id="card-name">
+                    </div>
+                </div>
+
+                <div class="checkout-actions">
+                    <button type="button" class="back-btn" onclick="window.location.href='address.html'">Back to Address</button>
+                    <button type="submit" class="continue-btn">Place Order</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Load order summary
+        document.addEventListener('DOMContentLoaded', function() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const orderItems = document.getElementById('order-items');
+            const orderTotal = document.getElementById('order-total');
+
+            let total = 0;
+            orderItems.innerHTML = cart.map(item => {
+                const product = products.find(p => p.id === item.id);
+                const itemTotal = product.price * item.quantity;
+                total += itemTotal;
+                return `
+                    <div class="order-item">
+                        <span>${product.name} x${item.quantity}</span>
+                        <span>$${itemTotal.toFixed(2)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            orderTotal.textContent = total.toFixed(2);
+
+            // Show/hide card details based on payment method
+            document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.getElementById('card-details').style.display = 
+                        this.value === 'card' ? 'block' : 'none';
+                });
+            });
+        });
+
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            window.location.href = 'success.html';
+        });
+    </script>
+</body>
+</html>

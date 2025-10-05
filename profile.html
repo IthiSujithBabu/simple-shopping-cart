@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - ShopSimple</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">ShopSimple</div>
+        <div class="header-right">
+            <a href="shop.html" class="shop-link">Back to Shop</a>
+            <button onclick="logout()" class="logout-btn">Logout</button>
+        </div>
+    </header>
+
+    <main class="profile-main">
+        <div class="profile-container">
+            <h2>My Profile</h2>
+            
+            <div class="profile-info">
+                <h3>Personal Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Username:</strong>
+                        <span id="profile-username"></span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Email:</strong>
+                        <span id="profile-email"></span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Member since:</strong>
+                        <span id="join-date"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-history">
+                <h3>Order History</h3>
+                <div id="orders-list">
+                    <!-- Orders will be populated here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function loadProfile() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const orders = JSON.parse(localStorage.getItem('userOrders')) || [];
+            
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            document.getElementById('profile-username').textContent = user.username;
+            document.getElementById('profile-email').textContent = user.email;
+            document.getElementById('join-date').textContent = new Date(user.joined).toLocaleDateString();
+            
+            const ordersList = document.getElementById('orders-list');
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<div class="empty-orders">No orders yet. <a href="shop.html">Start shopping!</a></div>';
+            } else {
+                // Filter orders for current user
+                const userOrders = orders.filter(order => order.userId === user.id);
+                
+                if (userOrders.length === 0) {
+                    ordersList.innerHTML = '<div class="empty-orders">No orders yet. <a href="shop.html">Start shopping!</a></div>';
+                } else {
+                    ordersList.innerHTML = userOrders.map(order => `
+                        <div class="order-card">
+                            <div class="order-header">
+                                <span><strong>Order #${order.id}</strong></span>
+                                <span>${new Date(order.date).toLocaleDateString()}</span>
+                            </div>
+                            <div class="order-total">Total: $${order.total.toFixed(2)}</div>
+                            <div class="order-status">Status: ${order.status}</div>
+                            <div class="order-address">
+                                <small>Deliver to: ${order.address.fullName}, ${order.address.city}</small>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>

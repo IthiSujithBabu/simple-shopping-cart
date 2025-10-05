@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSimple - Order Successful</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="success-page">
+    <header>
+        <div class="logo">ShopSimple</div>
+        <div class="header-right">
+            <a href="profile.html" class="profile-link">Profile</a>
+            <a href="shop.html" class="shop-link">Continue Shopping</a>
+        </div>
+    </header>
+
+    <main class="success-main">
+        <div class="success-container">
+            <div class="success-icon">🎉</div>
+            <h1>Order Successful!</h1>
+            <p class="success-message">Thank you for your purchase. Your order has been confirmed.</p>
+            
+            <div class="order-details">
+                <h3>Order Details</h3>
+                <div id="success-order-items"></div>
+                <div class="delivery-info">
+                    <h4>Delivery Address</h4>
+                    <div id="delivery-address"></div>
+                </div>
+            </div>
+
+            <div class="success-actions">
+                <button onclick="window.location.href='shop.html'" class="continue-shopping-btn">
+                    Continue Shopping
+                </button>
+                <button onclick="printOrder()" class="print-btn">
+                    Print Receipt
+                </button>
+            </div>
+
+            <div class="thank-you-message">
+                <h3>Happy Shopping! 🛍️</h3>
+                <p>We hope to see you again soon!</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show success message with animation
+            setTimeout(() => {
+                alert('🎉 Order placed successfully! Thank you for shopping with us. Happy Shopping! 🛍️');
+            }, 1000);
+
+            // Load order details
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const address = JSON.parse(localStorage.getItem('deliveryAddress')) || {};
+            
+            const orderItems = document.getElementById('success-order-items');
+            const deliveryAddress = document.getElementById('delivery-address');
+
+            let total = 0;
+            if (cart.length === 0) {
+                orderItems.innerHTML = '<div class="empty-cart">No items in order</div>';
+            } else {
+                orderItems.innerHTML = cart.map(item => {
+                    const product = products.find(p => p.id === item.id);
+                    const itemTotal = product.price * item.quantity;
+                    total += itemTotal;
+                    return `
+                        <div class="order-item">
+                            <span>${product.name} x${item.quantity}</span>
+                            <span>$${itemTotal.toFixed(2)}</span>
+                        </div>
+                    `;
+                }).join('') + `<div class="order-total"><strong>Total: $${total.toFixed(2)}</strong></div>`;
+            }
+
+            if (address.fullName) {
+                deliveryAddress.innerHTML = `
+                    <p><strong>${address.fullName}</strong></p>
+                    <p>${address.address}</p>
+                    <p>${address.city}, ${address.state} ${address.zipCode}</p>
+                    <p>${address.country}</p>
+                    <p>📞 ${address.phone}</p>
+                    ${address.instructions ? `<p><em>Instructions: ${address.instructions}</em></p>` : ''}
+                `;
+            }
+
+            // Clear cart after successful order
+            localStorage.removeItem('cart');
+            localStorage.removeItem('deliveryAddress');
+        });
+
+        function printOrder() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

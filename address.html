@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSimple - Delivery Address</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">ShopSimple</div>
+        <div class="checkout-steps">
+            <span class="step active">1. Cart</span>
+            <span class="step active">2. Address</span>
+            <span class="step">3. Payment</span>
+            <span class="step">4. Confirmation</span>
+        </div>
+    </header>
+
+    <main class="checkout-main">
+        <div class="checkout-container">
+            <h2>Delivery Address</h2>
+            
+            <form id="address-form" class="address-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full-name">Full Name *</label>
+                        <input type="text" id="full-name" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Street Address *</label>
+                    <input type="text" id="address" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State *</label>
+                        <input type="text" id="state" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="zip-code">ZIP Code *</label>
+                        <input type="text" id="zip-code" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country *</label>
+                        <input type="text" id="country" value="United States" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="instructions">Delivery Instructions (Optional)</label>
+                    <textarea id="instructions" rows="3"></textarea>
+                </div>
+
+                <div class="checkout-actions">
+                    <button type="button" class="back-btn" onclick="window.location.href='shop.html'">Back to Cart</button>
+                    <button type="submit" class="continue-btn">Continue to Payment</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('address-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Save address to localStorage
+            const address = {
+                fullName: document.getElementById('full-name').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                zipCode: document.getElementById('zip-code').value,
+                country: document.getElementById('country').value,
+                instructions: document.getElementById('instructions').value
+            };
+            localStorage.setItem('deliveryAddress', JSON.stringify(address));
+            window.location.href = 'payment.html';
+        });
+
+        // Load saved address if exists
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedAddress = JSON.parse(localStorage.getItem('deliveryAddress'));
+            if (savedAddress) {
+                document.getElementById('full-name').value = savedAddress.fullName || '';
+                document.getElementById('phone').value = savedAddress.phone || '';
+                document.getElementById('address').value = savedAddress.address || '';
+                document.getElementById('city').value = savedAddress.city || '';
+                document.getElementById('state').value = savedAddress.state || '';
+                document.getElementById('zip-code').value = savedAddress.zipCode || '';
+                document.getElementById('country').value = savedAddress.country || '';
+                document.getElementById('instructions').value = savedAddress.instructions || '';
+            }
+        });
+    </script>
+</body>
+</html>
