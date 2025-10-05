@@ -5,7 +5,7 @@ A complete e-commerce shopping cart application with user authentication, produc
 🚀 Live Demo
 Your application is running at:
 
-GitHub Hosted Link : https://ithisujithbabu.github.io/simple-shopping-cart/  < ------ Click this Link to open this Website ------->
+GitHub Hosted Link : https://ithisujithbabu.github.io/simple-shopping-cart/  < ------ Click this Link to open this Website
 
 Local: http://localhost:5500
 
@@ -180,4 +180,4 @@ Modern Browsers: Requires ES6+ support
 Ithi Sujith Babu
 📧 ithisujith@gmail.com
 
-🚀 Ready to explore? Open http://localhost:5500 in your browser!
+🚀 Ready to explore? Open https://ithisujithbabu.github.io/simple-shopping-cart/ in your browser!
